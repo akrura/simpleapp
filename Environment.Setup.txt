@@ -1,0 +1,60 @@
+1. Install apache2 (https://www.digitalocean.com/community/tutorials/how-to-set-up-apache-virtual-hosts-on-ubuntu-14-04-lts)
+
+a)	
+	sudo apt-get update
+	sudo apt-get install apache2
+
+b)
+	sudo mkdir -p /var/www/appneta/public_html
+	sudo chown -R $USER:$USER /var/www/appneta/public_html
+	sudo chmod -R 755 /var/www
+
+c) Create Virtual hosts file
+	sudo vim /etc/apache2/sites-available/appneta.conf
+
+	<VirtualHost *:80>
+    		ServerAdmin admin@example.com
+    		ServerName example.com
+    		ServerAlias www.example.com
+    		DocumentRoot /var/www/example.com/public_html
+    		ErrorLog ${APACHE_LOG_DIR}/error.log
+	    CustomLog ${APACHE_LOG_DIR}/access.log combined
+	</VirtualHost>
+
+d) Enable site
+	sudo a2ensite appneta.conf
+	sudo service apache2 restart
+	
+
+2. Install mod_wsgi and make .wsgi file
+
+a) 
+	apt-get install libapache2-mod-wsgi
+	sudo a2enmod wsgi 
+
+
+b) 
+	<VirtualHost *>
+    		ServerName example.com
+
+    		WSGIDaemonProcess yourapplication user=user1 group=group1 threads=5
+    		WSGIScriptAlias / /var/www/yourapplication/yourapplication.wsgi
+
+    		<Directory /var/www/yourapplication>
+        		WSGIProcessGroup yourapplication
+        		WSGIApplicationGroup %{GLOBAL}
+        		Order deny,allow
+        		Allow from all
+    		</Directory>
+	</VirtualHost>
+
+
+3. Install Flask
+
+a) pip install Flask
+
+http://flask.pocoo.org/docs/0.10/deploying/mod_wsgi/#configuring-apache
+
+https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps
+
+http://www.jakowicz.com/flask-apache-wsgi/
