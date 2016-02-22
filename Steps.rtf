@@ -1,0 +1,82 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1404\cocoasubrtf340
+{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red255\green255\blue255;\red38\green38\blue38;\red211\green34\blue44;
+\red38\green38\blue38;\red0\green0\blue0;\red47\green51\blue57;\red5\green52\blue78;\red64\green140\blue9;
+}
+\margl1440\margr1440\vieww14460\viewh10040\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs28 \cf0 \cb2 1. Install apache2 ({\field{\*\fldinst{HYPERLINK "https://www.digitalocean.com/community/tutorials/how-to-set-up-apache-virtual-hosts-on-ubuntu-14-04-lts"}}{\fldrslt https://www.digitalocean.com/community/tutorials/how-to-set-up-apache-virtual-hosts-on-ubuntu-14-04-lts}})\
+\
+a)\cf3 \expnd0\expndtw0\kerning0
+	\
+	sudo apt-get update\
+\pard\pardeftab720\sl440\partightenfactor0
+\cf3 	sudo apt-get install apache2\
+\pard\pardeftab720\sl320\partightenfactor0
+\cf0 \
+b)\
+	sudo mkdir -p /var/www/\cf4 appneta\cf0 /public_html\
+	sudo chown -R $USER:$USER /var/www/\cf4 appneta\cf0 /public_html\
+	\cf3 sudo chmod -R 755 /var/www\cf0 \
+\
+c) Create Virtual hosts file\
+	sudo vim /etc/apache2/sites-available/\cf4 appneta.conf\cf0 \
+\
+	<VirtualHost *:80>\
+    		ServerAdmin \cf4 admin@example.com\cf0 \
+    		ServerName \cf4 example.com\cf0 \
+    		ServerAlias \cf4 www.example.com\cf0 \
+    		DocumentRoot /var/www/\cf4 example.com\cf0 /public_html\
+    		ErrorLog $\{APACHE_LOG_DIR\}/error.log\
+	    CustomLog $\{APACHE_LOG_DIR\}/access.log combined\
+	</VirtualHost>\
+\
+d) Enable site\
+	sudo a2ensite appneta.conf\
+	\cf5 \outl0\strokewidth0 \strokec5 sudo service apache2 restart\cf6 \strokec6 \
+\cf0 \outl0\strokewidth0 	\cf3 \
+\pard\pardeftab720\sl440\partightenfactor0
+\cf3 2. \cf0 \kerning1\expnd0\expndtw0 Install mod_wsgi and make .wsgi file\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 a) \
+	\cf7 \expnd0\expndtw0\kerning0
+apt-get install libapache2-mod-wsgi\
+\pard\pardeftab720\sl320\partightenfactor0
+\cf6 \outl0\strokewidth0 \strokec6 	sudo a2enmod wsgi \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf7 \outl0\strokewidth0 \
+\cf0 \kerning1\expnd0\expndtw0 \
+b) \
+\pard\tx642\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\fi651\pardirnatural\partightenfactor0
+\cf8 \expnd0\expndtw0\kerning0
+<VirtualHost\cf7  \cf9 *\cf8 >\cf7 \
+\pard\tx642\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardeftab720\fi651\sl280\partightenfactor0
+\cf7     \cf8 ServerName\cf7  example.com\
+\
+    \cf8 WSGIDaemonProcess\cf7  yourapplication \cf8 user\cf7 =user1 \cf8 group\cf7 =group1 threads=5\
+    \cf8 WSGIScriptAlias\cf7  / \cf9 /var/www/yourapplication/yourapplication.wsgi\cf7 \
+\
+    \cf8 <Directory\cf7  \cf9 /var/www/yourapplication\cf8 >\cf7 \
+        \cf8 WSGIProcessGroup\cf7  yourapplication\
+        \cf8 WSGIApplicationGroup\cf7  %\{GLOBAL\}\
+        \cf8 Order\cf7  deny,allow\
+        \cf8 Allow\cf7  from \cf8 all\cf7 \
+    \cf8 </Directory>\cf7 \
+\cf8 </VirtualHost>\cf7 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \kerning1\expnd0\expndtw0 \
+3. Install Flask\
+\
+a) pip install Flask\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "http://flask.pocoo.org/docs/0.10/deploying/mod_wsgi/#configuring-apache"}}{\fldrslt \cf0 http://flask.pocoo.org/docs/0.10/deploying/mod_wsgi/#configuring-apache}}\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps"}}{\fldrslt \cf0 https://www.digitalocean.com/community/tutorials/how-to-deploy-a-flask-application-on-an-ubuntu-vps}}\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+{\field{\*\fldinst{HYPERLINK "http://www.jakowicz.com/flask-apache-wsgi/"}}{\fldrslt \cf0 http://www.jakowicz.com/flask-apache-wsgi/}}\
+}
